@@ -50,8 +50,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/senai_fastapi:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/senai_fastapi:${{ github.sha }}
+            BrendaTsutake/senai_fastapi:latest
+            BrendaTsutake/senai_fastapi:${{ github.sha }}
 
   Deploy:
     name: Implantação AWS
@@ -66,14 +66,14 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/senai_fastapi:latest
+            sudo docker pull BrendaTsutake/senai_fastapi:latest
             sudo docker stop senai_fastapi 2>/dev/null || true
             sudo docker rm senai_fastapi 2>/dev/null || true
             sudo docker run -d \
               --name senai_fastapi \
               --restart unless-stopped \
               -p 8080:8080 \
-              ${{ secrets.DOCKERHUB_USERNAME }}/senai_fastapi:latest
+              BrendaTsutake/senai_fastapi:latest
             sleep 5
             curl -f http://localhost:8080/health || exit 1
             sudo docker image prune -f
